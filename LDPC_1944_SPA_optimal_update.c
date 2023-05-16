@@ -37,30 +37,30 @@ int main(){
         exit(EXIT_FAILURE);
     }
     
-    int n,k,dv,dc;
+    int n,m,dv,dc;
     
     
     fscanf(fp1,"%d ",&n);
-    fscanf(fp1,"%d ",&k);
+    fscanf(fp1,"%d ",&m);
     fscanf(fp1,"%d ",&dv);
     fscanf(fp1,"%d ",&dc);
     
-    printf("%d %d %d %d\n",n,k,dv,dc);
+    printf("%d %d %d %d\n",n,m,dv,dc);
     
-    const double R=(double)k/n; //coderate
+    const double R=(double)(n-m)/n; //coderate
     
     //建立 number of col row nonzero location
 	 
-    int col[1944];		//number of col nonzero 
+    int* col = (int*)malloc(sizeof(int)*n);		//number of col nonzero 
     
     for(int i=0;i<n;i++){
     	fscanf(fp1,"%d ",&col[i]);
     	
 	}
 	
-	int row[972];		//number of row nonzero 
+	int* row = (int*)malloc(sizeof(int)*m);		//number of row nonzero 
     
-    for(int i=0;i<(n-k);i++){
+    for(int i=0;i<m;i++){
     	fscanf(fp1,"%d ",&row[i]);	
 	}	
 	
@@ -72,154 +72,51 @@ int main(){
 		VN_set[i] = (int *)malloc(sizeof(int) * col[i]);
 	}
 	//CN
-	int** CN_set = (int **)malloc(sizeof(int*) * (n-k));
-	for(int i=0;i<n-k;i++){
+	int** CN_set = (int **)malloc(sizeof(int*) * m);
+	for(int i=0;i<m;i++){
 		CN_set[i] = (int *)malloc(sizeof(int) * row[i]);
 	}	
 
 	
-
+	for(int i=0;i<n;i++){
+		for(int j=0;j<col[i];j++){
+			fscanf(fp1,"%d ",&VN_set[i][j]);
+			VN_set[i][j]--;
+		}
+		for(int k=col[i];k<dv;k++){
+			int buffer;
+			fscanf(fp1,"%d ",&buffer);	//把多餘的 col idex 用 buffer 消耗掉 
+		}
+	}
 	
-	int i = 0;
-	int c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11;
-	while(fscanf(fp1,"%d %d %d %d %d %d %d %d %d %d %d",&c1,&c2,&c3,&c4,&c5,&c6,&c7,&c8,&c9,&c10,&c11)){
-		//printf("%d %d %d %d %d %d %d %d %d %d %d\n",c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11);
-		
-		//col[i] 為該VN之權重 
-		
-		if(col[i]>0){
-			if(c1!=0) 
-				VN_set[i][0] = c1-1;
-			else
-				VN_set[i][0] = -1;
+	
+	for(int i=0;i<m;i++){
+		for(int j=0;j<row[i];j++){
+			fscanf(fp1,"%d ",&CN_set[i][j]);
+			CN_set[i][j]--;
 		}
-		if(col[i]>1){
-			if(c2!=0) 
-				VN_set[i][1] = c2-1;
-			else
-				VN_set[i][1] = -1;
-		} 
-		if(col[i]>2){
-			if(c3!=0) 
-				VN_set[i][2] = c3-1;
-			else
-				VN_set[i][2] = -1;	
-		} 
-		if(col[i]>3){
-			if(c4!=0) 
-				VN_set[i][3] = c4-1;
-			else
-				VN_set[i][3] = -1;
-		} 
-		if(col[i]>4){
-			if(c5!=0) 
-				VN_set[i][4] = c5-1;
-			else
-				VN_set[i][4] = -1;
-		} 
-		if(col[i]>5){
-			if(c6!=0) 
-				VN_set[i][5] = c6-1;
-			else
-				VN_set[i][5] = -1;
-		} 
-		if(col[i]>6){
-			if(c7!=0) 
-				VN_set[i][6] = c7-1;
-			else
-				VN_set[i][6] = -1;
-		} 
-		if(col[i]>7){
-			if(c8!=0) 
-				VN_set[i][7] = c8-1;
-			else
-				VN_set[i][7] = -1;
+		for(int k=row[i];k<dc;k++){
+			int buffer;
+			fscanf(fp1,"%d ",&buffer);	//把多餘的 col idex 用 buffer 消耗掉 
 		}
-		if(col[i]>8){ 
-			if(c9!=0) 
-				VN_set[i][8] = c9-1;
-			else
-				VN_set[i][8] = -1;
-		}
-		if(col[i]>9){ 
-			if(c10!=0) 
-				VN_set[i][9] = c10-1;
-			else
-				VN_set[i][9] = -1;
-		}
-		if(col[i]>10){ 
-			if(c11!=0) 
-				VN_set[i][10] = c11-1;
-			else
-				VN_set[i][10] = -1;
-		}
-		
-		if(i==n-1)
-			break;
-		i++;
 	}
-	i=0;
-	while(fscanf(fp1,"%d %d %d %d %d %d %d %d",&c1,&c2,&c3,&c4,&c5,&c6,&c7,&c8)){
-		//printf("%d %d %d %d %d %d %d %d\n",c1,c2,c3,c4,c5,c6,c7,c8);
-		
-		//row[i] 為該 CN之權重 
-		
-		if(row[i]>0){
-			if(c1!=0) 
-				CN_set[i][0] = c1-1;
-			else
-				CN_set[i][0] = -1;
+	
+	/*
+	for(int i=0;i<n;i++){
+		for(int j=0;j<col[i];j++){
+			printf("%d ",VN_set[i][j]);
+			
 		}
-		if(row[i]>1){
-			if(c2!=0) 
-				CN_set[i][1] = c2-1;
-			else
-				CN_set[i][1] = -1;
-		} 
-		if(row[i]>2){
-			if(c3!=0) 
-				CN_set[i][2] = c3-1;
-			else
-				CN_set[i][2] = -1;	
-		} 
-		if(row[i]>3){
-			if(c4!=0) 
-				CN_set[i][3] = c4-1;
-			else
-				CN_set[i][3] = -1;
-		} 
-		if(row[i]>4){
-			if(c5!=0) 
-				CN_set[i][4] = c5-1;
-			else
-				CN_set[i][4] = -1;
-		} 
-		if(row[i]>5){
-			if(c6!=0) 
-				CN_set[i][5] = c6-1;
-			else
-				CN_set[i][5] = -1;
-		} 
-		if(row[i]>6){
-			if(c7!=0) 
-				CN_set[i][6] = c7-1;
-			else
-				CN_set[i][6] = -1;
-		} 
-		if(row[i]>7){
-			if(c8!=0) 
-				CN_set[i][7] = c8-1;
-			else
-				CN_set[i][7] = -1;
-		}
-		
-		
-		
-		if(i==(n-k)-1)
-			break;
-		i++;
+		printf("\n");
 	}
-
+	for(int i=0;i<m;i++){
+		for(int j=0;j<row[i];j++){
+			printf("%d ",CN_set[i][j]);
+			
+		}
+		printf("\n");
+	}
+	*/
 	fclose(fp1);
 	
 	
@@ -229,14 +126,14 @@ int main(){
 	//channel information
 	double* Fn = (double *)malloc(sizeof(double) * n);
 	//tau
-	double** tau= (double **)malloc(sizeof(double*) * (n-k));
-	for(int i=0;i<(n-k);i++){
+	double** tau= (double **)malloc(sizeof(double*) * m);
+	for(int i=0;i<m;i++){
 		tau[i] = (double *)malloc(sizeof(double) * dc);
 	}
 	
 	//CN update //CN[j][i]  CN j to CN i
-	double** CN = (double **)malloc(sizeof(double*) * (n-k));
-	for(int i=0;i<(n-k);i++){
+	double** CN = (double **)malloc(sizeof(double*) * m);
+	for(int i=0;i<m;i++){
 		CN[i] = (double *)malloc(sizeof(double) * dc);
 	}
 	
@@ -361,14 +258,14 @@ int main(){
 			for(iter=0;iter<iteration;iter++){
 				
 				//CN update	
-				for(int j=0;j<(n-k);j++){	
+				for(int j=0;j<m;j++){	
 					for(int i=0;i<row[j];i++){
 						tau[j][i]=1;	
 					}
 				}
 			
 				
-				for(int j=0;j<(n-k);j++){				//go through all CN	
+				for(int j=0;j<m;j++){				//go through all CN	
 					for(int i=0;i<row[j];i++){				//相連之 VN 
 						//if(CN_set[j][i]==-1){
 						//	continue;
@@ -487,7 +384,7 @@ int main(){
 				int* s = (int *)malloc(sizeof(int) * (n-k));
 				bool iszerovector = true;
 				
-				for(int j=0;j<(n-k);j++){
+				for(int j=0;j<m;j++){
 					s[j] =0;
 					for(int i=0;i<row[j];i++){
 						if(CN_set[j][i]>=0&&u_hat[CN_set[j][i]]==1)
